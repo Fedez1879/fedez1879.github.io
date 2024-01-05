@@ -641,6 +641,23 @@ class IFEngine{
 			} 
 		}
 		
+		// Roba scenica
+		if(this.currentRoom.scenic){
+
+			for(let pattern of this.currentRoom.scenic.pattern){
+				pattern = typeof pattern == 'function' ? 
+					pattern() : 
+					(
+						pattern.substr(0,1) != "(" ? 
+						`(${pattern})` :
+						pattern
+					)
+				pattern = new RegExp("^"+pattern+"$", 'i');
+				if(testVerb.match(pattern)){
+					return await this.CRT.printTyping(this.currentRoom.scenic.defaultMessage ? this.currentRoom.scenic.defaultMessage : APO.actionObject.defaultMessage)
+				}
+			}
+		}
 		// Mappo i complementi con 
 		// - interattori della stanza
 		// - oggetti nella stanza

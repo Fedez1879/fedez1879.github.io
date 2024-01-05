@@ -19,6 +19,10 @@ class Adventure extends DemoEngine{
 						exit: async() => this.stringOrFalse(this.currentRoom.directions.e())
 					}
 				},
+				scenic: {
+					pattern: [`chiodo`, `ruot(?:a|e)`, `viso`, `riflesso`, `ganci(?:o)`],
+					defaultMessage: `Lascia perdere, concentrati su trovare il modo di uscire di qui..`
+				},
 				interactors: {
 					ufficio: {
 						pattern: `ufficio`,
@@ -43,9 +47,6 @@ class Adventure extends DemoEngine{
 								lookAt: () => this.currentRoom.interactors.pareti.description()
 							}
 						}
-					},
-					chiodo: {
-						pattern: `chiodo`
 					},
 					sedia: {
 						pattern: `sedia`,
@@ -113,7 +114,7 @@ class Adventure extends DemoEngine{
 						label: `un attaccapanni`,
 						pattern: `attaccapanni|appendiabiti`,
 						visible: false,
-						description: () => `E' di metallo nero, alto, con 4 braccia.` + (this.currentRoom.objects.piumino && this.currentRoom.objects.piumino.visible ? `\nIn uno di essi è appeso un piumino nero.` : ``),
+						description: () => `E' di metallo nero, alto, con quattro ganci.` + (this.currentRoom.objects.piumino && this.currentRoom.objects.piumino.visible ? `\nIn uno di essi è appeso un piumino nero.` : ``),
 						on: {
 							lookAt: () => this.discover(this.adventureData.objects.piumino)
 						}
