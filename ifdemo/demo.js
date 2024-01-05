@@ -441,8 +441,7 @@ class Adventure extends DemoEngine{
 						return answer;
 
 					},
-					drop: `Meglio di no, non ci vedi molto bene senza!`,
-					search: `Non saprei dove cercare...`
+					drop: `Meglio di no, non ci vedi molto bene senza!`
 				}
 			},
 			piumino: {

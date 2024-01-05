@@ -17,7 +17,7 @@ class DemoEngine extends IFEngine{
 		this.Thesaurus.commands.where.pattern = "dove(?:sono|mi trovo)?";
 		this.Thesaurus.commands.instructions.pattern = "istruzioni";
 		
-		//this.CRT.sleep = (ms) => true; // for speed test
+		this.CRT.sleep = (ms) => true; // for speed test
 
 		this.commonInteractors = {
 			wall: {
@@ -28,6 +28,9 @@ class DemoEngine extends IFEngine{
 			},
 			ceiling: {
 				pattern: this.Thesaurus.commonPatterns.ceiling
+			},
+			exit:{
+				pattern: this.Thesaurus.commonPatterns.exit
 			}
 
 		}

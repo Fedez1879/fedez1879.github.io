@@ -645,13 +645,6 @@ class IFEngine{
 		if(this.currentRoom.scenic){
 
 			for(let pattern of this.currentRoom.scenic.pattern){
-				pattern = typeof pattern == 'function' ? 
-					pattern() : 
-					(
-						pattern.substr(0,1) != "(" ? 
-						`(${pattern})` :
-						pattern
-					)
 				pattern = new RegExp("^"+pattern+"$", 'i');
 				if(testVerb.match(pattern)){
 					return await this.CRT.printTyping(this.currentRoom.scenic.defaultMessage ? this.currentRoom.scenic.defaultMessage : APO.actionObject.defaultMessage)
@@ -765,16 +758,22 @@ class IFEngine{
 				return await this.CRT.printTyping(this.Thesaurus.defaultMessages.DONT_HAVE_ANY);
 
 			case "search":
-				if(this.currentRoom.interactors[mSubjects[0].key] !== undefined){
-					return await this.CRT.printTyping(this.Thesaurus.defaultMessages.HERE);
-				}
 				if(this.inventory[mSubjects[0].key] !== undefined){
 					return await this.CRT.printTyping(i18n.IFEngine.messages.alreadyHaveIt);
 				}
+				
+				if(this.currentRoom.interactors[mSubjects[0].key] !== undefined || 
+					(
+						this.currentRoom.objects[mSubjects[0].key] !== undefined && this.currentRoom.objects[mSubjects[0].key].initialDescription
+					)
+				){
+					return await this.CRT.printTyping(this.Thesaurus.defaultMessages.HERE);
+				}
+				
 				if(this.currentRoom.objects[mSubjects[0].key] !== undefined && this.currentRoom.objects[mSubjects[0].key].visible){
 					return 	await this.listVisibleThings(this.currentRoom.objects);
 				}
-				return this.Thesaurus.defaultMessages.notFound;
+				return await this.CRT.printTyping(this.Thesaurus.defaultMessages.NOT_FOUND);
 		}
 
 
