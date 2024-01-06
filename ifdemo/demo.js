@@ -227,7 +227,7 @@ class Adventure extends DemoEngine{
 								if(this.currentRoom.interactors.cavi.status == 0)
 									return `Perché dovrei?`
 								await this.CRT.printTyping(`Li sollevi per un po'... `,{cr:false,waitBefore:2000});
-								retutn `poi ti stanchi e li lasci ricadere ancora più in disordine di prima!`
+								return `poi ti stanchi e li lasci ricadere ancora più in disordine di prima!`
 							},
 						}
 					},
@@ -325,7 +325,7 @@ class Adventure extends DemoEngine{
 							open: () => {
 								if(this.currentRoom.interactors.portone.locked)
 									return `Il portone è bloccato, non riesco ad aprirlo!`
-								this.runSequence(`finale`);
+								return this.runSequence(`finale`);
 							},
 							close: () => `E' già chiuso!`
 						}
@@ -568,18 +568,17 @@ class Adventure extends DemoEngine{
 					this.adventureData.timedEvents.earthquake.currentStep = 6
 			},
 			finale: async() => {
-				await this.CRT.printTyping(`Dopo aver aperto il portone quel poco che basta per farti uscire, corri come un forsennato verso il parcheggio.`, {waitBefore: 2000})
-				await this.CRT.printTyping(`Una tremenda scossa di terremoto di durata interminabile fa crollare l'edificio. Cadi a terra dalla violenza, ma essendo fuori all'aperto non hai conseguenze gravi.`, {waitBefore: 5000})
-				await this.CRT.printTyping(`Appena la scossa si attenua, riesci finalmente ad alzarti...`, {waitBefore: 2000, cr:false})
-				await this.CRT.printTyping(`Non credi ai tuoi occhi...`)
+				await this.CRT.printTyping(`Dopo aver aperto il portone quel poco che basta per farti uscire, corri come un forsennato verso il parcheggio.`, {waitAfter: 4000})
+				await this.CRT.printTyping(`Una tremenda scossa di terremoto di durata interminabile fa crollare l'edificio. Cadi a terra dalla violenza, ma essendo fuori all'aperto non hai conseguenze gravi.`, {waitAfter: 5000})
+				await this.CRT.printTyping(`Appena la scossa si attenua, riesci finalmente ad alzarti...`, {waitAfter: 2000, cr:false})
+				await this.CRT.printTyping(`Non credi ai tuoi occhi...`, {waitAfter: 1500})
 				await this.CRT.wait();
-				await this.CRT.printTyping(`Osservi sbalordito la scena apocalittica davanti a te. Non solo l'edificio dove lavoravi è stato raso al suolo ma la stessa sorte è toccata a tutta la città...`, {waitBefore: 3000})
-				await this.CRT.printTyping(`Mentre l'oscurità della notte avanza, inizi a correre, per quanto ti è possibile, in direzione di casa tua, con la flebile speranza di poter riabbracciare la tua famiglia.......`, {waitBefore: 5000})
+				await this.CRT.printTyping(`Osservi sbalordito la scena apocalittica davanti a te. Non solo l'edificio dove lavoravi è stato raso al suolo ma la stessa sorte è toccata a tutta la città...`, {waitAfter: 3000})
+				await this.CRT.printTyping(`Mentre l'oscurità della notte avanza, inizi a correre, per quanto ti è possibile, in direzione di casa tua, con la flebile speranza di poter riabbracciare la tua famiglia...`, {printDelay:50,waitAfter: 5000})
 				await this.CRT.wait();
-				await this.CRT.clear();
-				await this.CRT.printTyping(`-FINE-`, {waitAfter: 1000, waitBefore: 5000})
-				await this.CRT.clear();
-				this.byebye()
+				await this.CRT.printTyping(`-FINE-`, {waitBefore: 1000, waitAfter: 1000})
+				await this.byebye()
+				return false;
 			}
 		},
 		timedEvents: {
