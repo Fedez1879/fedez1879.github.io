@@ -49,8 +49,6 @@ class DemoEngine extends IFEngine{
 		}
 		this.CRT.clear();
 		await this.enterRoom(this.startingRoom)
-		await this._addInInventory(this.adventureData.objects.badge)
-		
 	}
 
 	async instructions(){
