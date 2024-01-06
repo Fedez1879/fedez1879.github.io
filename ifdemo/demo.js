@@ -20,7 +20,7 @@ class Adventure extends DemoEngine{
 					}
 				},
 				scenic: {
-					pattern: [`chiodo`, `ruot(?:a|e)`, `viso`, `riflesso`, `ganci(?:o)`],
+					pattern: [`chiodo`, `ruot(?:a|e)`, `viso`, `riflesso`, `ganci(?:o)`, `vetro`],
 					defaultMessage: `Lascia perdere, concentrati piuttosto su come trovare il modo di uscire da qui..`
 				},
 				interactors: {
