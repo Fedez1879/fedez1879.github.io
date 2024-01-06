@@ -398,6 +398,7 @@ class Adventure extends DemoEngine{
 			chiaveCassettiera: {
 				label: `una piccola chiave di ferro`,
 				pattern: `(?:piccola )?chiave((?: di)? ferro)?`,
+				description: `E' una piccola chiave di ferro con la testa in plastica nera.`,
 				location: `ufficio`,
 				visible: false,
 				on: {
@@ -520,17 +521,27 @@ class Adventure extends DemoEngine{
 				location: `ufficio`,
 				read: false,
 				visible: false,
+				linkedObjects: ['segnalibro'],
 				description: () => this.adventureData.objects.libro.visible ? `Ha una copertina grigia e un segnalibro all'interno.` : `Non saprei quale scegliere.`,
 				on: {
+					lookAt: () => this.discover(this.adventureData.objects.segnalibro, true),
 					'open|read': () => {
 
 						if (this.playerHas(this.adventureData.objects.libro)){
+							this.discover(this.adventureData.objects.segnalibro, true)
 							this.inventory.libro.read = true;
 							return `E' un romanzo di Stephen King, dal titolo INSOMNIA. Apri il libro all'altezza del segnalibro e trovi una pagina bianca sulla quale è stato scritto a matita: "ymd"`
 						}
 						return this.adventureData.objects.libro.visible ? `Dovrei prenderlo prima...` : this.adventureData.objects.libro.description()
 					},
 					take: () => this.adventureData.objects.libro.visible ? null : this.adventureData.objects.libro.description()
+				}
+			},
+			segnalibro: {
+				visible: false,
+				pattern: `segnalibro`,
+				on:{
+					lookAt: `E' un segnalibro di cartoncino nero.`
 				}
 			}
 
