@@ -549,7 +549,7 @@ class Adventure extends DemoEngine{
 			prologo: async () => {
 				await this.CRT.printTyping(`Accidenti che mal di testa....`, {waitBefore: 1000})
 				await this.CRT.printTyping(`Come ho fatto ad addormentarmi in ufficio?`, {waitBefore: 1500})
-				await this.CRT.printTyping(`E Quanto tempo è passato?`, {waitBefore:1000})
+				await this.CRT.printTyping(`E quanto tempo è passato?`, {waitBefore:1000})
 				await this.CRT.printTyping(`Uhm... `, {cr: false, waitBefore: 1500})
 				await this.CRT.printTyping(`E' tutto troppo silenzioso qui.`, {waitBefore: 2000});
 				await this.CRT.printTyping(`Sarà meglio tornare a casa.`, {nlAfter: 1,waitBefore: 1500,waitAfter: 2000})
