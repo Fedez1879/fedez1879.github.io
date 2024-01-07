@@ -443,7 +443,7 @@ class Adventure extends DemoEngine{
 					'take|wear': () => {
 						let occhiali = this.adventureData.objects.occhiali
 						if(this.playerHas(occhiali))
-							return "Li hai già indosso."
+							return "Sono già sul tuo naso!"
 						let answer;
 						if(occhiali.once == false) {
 							occhiali.once = true;
