@@ -269,7 +269,7 @@ class Adventure extends DemoEngine{
 								let porta = this.currentRoom.interactors.porta;
 
 								if(porta.locked) 
-									return `Provi a tirare il pomolo della porta, ma non riesci proprio ad aprirla... è bloccata...`
+									return `Provi a tirare il pomolo della porta, ma non si apre. Sembra bloccata...`
 								if(porta.open)
 									return `La porta è già aperta`
 								porta.open = true
