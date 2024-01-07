@@ -249,7 +249,7 @@ class Adventure extends DemoEngine{
 							description: () => {
 								if(this.currentRoom.interactors.cavi.status == 0)
 									this.currentRoom.interactors.cavi.status = 1
-								return `E' il classico pavimento flottante presente in quasi tutte le stanze del posto dove lavori... è grigio chiaro con striature più scure.` + (this.currentRoom.interactors.cavi.status == 1 ? `\nAccipicchia! vicino alla scrivania è tutto un groviglio di cavi!` : ``);
+								return `E' il classico pavimento flottante presente in quasi tutte le stanze del posto dove lavori... è grigio chiaro con striature più scure.` + (this.currentRoom.interactors.cavi.status == 1 ? `\nAccipicchia! Vicino alla scrivania è tutto un groviglio di cavi!` : ``);
 							}
 						}
 					},
