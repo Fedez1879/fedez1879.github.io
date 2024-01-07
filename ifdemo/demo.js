@@ -36,7 +36,7 @@ class Adventure extends DemoEngine{
 						...this.commonInteractors.wall,
 						...{
 							description: async () => {
-								await this.CRT.printTyping(`Nella parete di fronte, c'è il modile a vetri, in quella a est c'è la porta di ingresso. Nella parete opposta alla porta c'è l'unica finestra della stanza.\nLa parete dietro di te è completamente spoglia, a parte `+(this.playerHas(this.adventureData.objects.occhiali) ? ``: `(credo) `)+ `un calendario appeso a un chiodo.`);
+								await this.CRT.printTyping(`Nella parete di fronte, c'è il mobile a vetri, in quella a est c'è la porta di ingresso. Nella parete opposta alla porta c'è l'unica finestra della stanza.\nLa parete dietro di te è completamente spoglia, a parte `+(this.playerHas(this.adventureData.objects.occhiali) ? ``: `(credo) `)+ `un calendario appeso a un chiodo.`);
 								if( this.currentRoom.interactors.attaccapanni.visible == false){
 									await this.CRT.sleep(1500);
 									await this.CRT.printTyping(`Di fianco al mobile c'è un attaccapanni, mica l'avevo notato prima!`)
