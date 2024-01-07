@@ -92,7 +92,7 @@ class Adventure extends DemoEngine{
 						label: 'alcuni libri',
 						pattern: `libri`,
 						visible: false,
-						description: () => this.currentRoom.interactors.mobile.open ? (this.playerHas(this.adventureData.objects.occhiali) ? `Sono tutti libri di programmazione: PHP, JAVA, PYTHON...` + (this.adventureData.objects.libro.visible ? `C'è nè uno diverso dagli altri...` : ``) : `Sulle costole dei libri ci sono scritti i vari titoli, purtroppo senza occhiali non riesco a distinguere bene i caratteri...`) : `Forse dovrei aprire le ante per esaminarli meglio`,
+						description: () => this.currentRoom.interactors.mobile.open ? (this.playerHas(this.adventureData.objects.occhiali) ? `Sono tutti libri di programmazione: PHP, JAVA, PYTHON...` + (this.adventureData.objects.libro.visible ? `C'è nè uno diverso dagli altri.` : ``) : `Sulle costole dei libri ci sono scritti i vari titoli, purtroppo senza occhiali non riesco a distinguere bene i caratteri...`) : `Forse dovrei aprire le ante per esaminarli meglio.`,
 						on: {
 							'lookAt|read|open': () => this.discover(this.adventureData.objects.libro, !this.playerHas(this.adventureData.objects.occhiali))
 						}
