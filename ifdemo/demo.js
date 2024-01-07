@@ -443,7 +443,7 @@ class Adventure extends DemoEngine{
 					'take|wear': () => {
 						let occhiali = this.adventureData.objects.occhiali
 						if(this.playerHas(occhiali))
-							return "Sono già sul tuo naso!"
+							return "Sono già sul tuo nano!."
 						let answer;
 						if(occhiali.once == false) {
 							occhiali.once = true;
@@ -527,7 +527,6 @@ class Adventure extends DemoEngine{
 						}
 						return null
 					},
-					wear: () =>
 				}
 			},
 			libro: {
