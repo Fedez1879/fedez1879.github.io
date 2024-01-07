@@ -20,7 +20,7 @@ class Adventure extends DemoEngine{
 					}
 				},
 				scenic: {
-					pattern: [`chiodo`, `ruot(?:a|e)`, `viso`, `riflesso`, `ganci(?:o)`, `vetro`],
+					pattern: [`chiodo`, `ruot(?:a|e)`, `viso`, `riflesso`, `ganci(?:o)?`, `vetro`],
 					defaultMessage: `Lascia perdere, concentrati piuttosto su come trovare il modo di uscire da qui..`
 				},
 				interactors: {
@@ -112,7 +112,7 @@ class Adventure extends DemoEngine{
 					},
 					attaccapanni: {
 						label: `un attaccapanni`,
-						pattern: `attaccapanni|appendiabiti`,
+						pattern: `attacca(?:\s+)?panni|appendi(?:\s+)?abiti`,
 						visible: false,
 						description: () => `E' di metallo nero, alto, con quattro ganci.` + (this.currentRoom.objects.piumino && this.currentRoom.objects.piumino.visible ? `\nIn uno di essi è appeso un piumino nero.` : ``),
 						on: {
