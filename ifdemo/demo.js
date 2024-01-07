@@ -617,7 +617,7 @@ class Adventure extends DemoEngine{
 					this.die();
 				},
 				steps: {
-					50: async () => this.CRT.printTyping(`Ehi...Mi è sembrato di sentire una vibrazione sotto i piedi...`,{nlBefore: 1, waitBefore: 1500}),
+					50: async () => this.CRT.printTyping(`Ehi... Mi è sembrato di sentire una vibrazione sotto i piedi...`,{nlBefore: 1, waitBefore: 1500}),
 					39: async () => this.CRT.printTyping(`Un'altra... Stavolta era proprio una scossa, l'ho avvertita bene!`,{nlBefore: 1, waitBefore: 1500}),
 					27: async () => this.CRT.printTyping(`Accipicchia, questa era forte... è durata anche diversi secondi...`,{nlBefore: 1, waitBefore: 1500}),
 					17: async () => this.CRT.printTyping(`Inizio a sentire degli scricchiolii...`,{nlBefore: 1, waitBefore: 1500}),
