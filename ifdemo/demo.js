@@ -238,7 +238,7 @@ class Adventure extends DemoEngine{
 							lift: async () => {
 								if(this.currentRoom.interactors.cavi.status == 0)
 									return `Perché dovrei?`
-								await this.CRT.printTyping(`Li sollevi per un po'... `,{cr:false,waitBefore:2000});
+								await this.CRT.printTyping(`Li sollevi per un po'... `,{cr:false,waitAfter:2000});
 								return `poi ti stanchi e li lasci ricadere ancora più in disordine di prima!`
 							},
 						}
