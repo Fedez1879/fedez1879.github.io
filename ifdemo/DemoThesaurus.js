@@ -48,7 +48,7 @@ class DemoThesaurus extends Thesaurus{
 					defaultMessage: this.defaultMessages.BE_SERIOUS
 				},
 				bringCloser: {
-					pattern: `avvicina (.+)? a (.+)`,
+					pattern: `avvicina (.+) a (.+)`,
 					defaultMessage: this.defaultMessages.NOTHING_HAPPENS,
 					inventory: true,
 					complex: true
