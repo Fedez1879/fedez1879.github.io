@@ -456,7 +456,7 @@ class Adventure extends DemoEngine{
 						return this.wear(occhiali.key, answer);
 					},
 					wear: () => `Sono già sul tuo naso!`,
-					takeOff: () => this.adventureData.objects.occhiali.on.drop(),
+					takeOff: () => this.inventory.occhiali.on.drop,
 					drop: `Meglio di no, non ci vedi molto bene senza!`
 				}
 			},
