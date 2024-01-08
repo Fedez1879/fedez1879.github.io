@@ -121,7 +121,7 @@ class Adventure extends DemoEngine{
 					},
 					scrivania: {
 						pattern: `scrivania`,
-						description: () => `E’ una scrivania rettangolare in legno chiaro. Sotto di essa c’è una cassettiera in ferro e il piccolo cestino dell’immondizia. Sopra di essa un'accozzaglia di appunti scritti su fogli e foglietti.` + (this.adventureData.objects.occhiali.visible && playerHas(this.adventureData.objects.occhiali) == false ? this.adventureData.objects.occhiali.initialDescription : ``)
+						description: () => `E’ una scrivania rettangolare in legno chiaro. Sotto di essa c’è una cassettiera in ferro e il piccolo cestino dell’immondizia. Sopra di essa un'accozzaglia di appunti scritti su fogli e foglietti.` + (this.adventureData.objects.occhiali.visible === undefined && this.playerHas(this.adventureData.objects.occhiali) == false ? `\n`+this.adventureData.objects.occhiali.initialDescription : ``)
 					},
 					appunti: {
 						pattern: `appunt(?:o|i)|fogli(?:o|i|etti)?`,
@@ -421,6 +421,7 @@ class Adventure extends DemoEngine{
 						}
 						if(targets[1] == i.cassetti || targets[1] == i.serratura){
 							if(i.cassetti.open){
+								i.cassetti.open = false
 								await this.CRT.printTyping(`Prima chiudo i cassetti...`);
 								await this.CRT.sleep(1000)
 							}
@@ -439,11 +440,10 @@ class Adventure extends DemoEngine{
 				location: `ufficio`,
 				visible: false,
 				once: false,
+				worn: false,
 				on: {
-					'take|wear': () => {
+					'take': () => {
 						let occhiali = this.adventureData.objects.occhiali
-						if(this.playerHas(occhiali))
-							return "Sono già sul tuo naso!"
 						let answer;
 						if(occhiali.once == false) {
 							occhiali.once = true;
@@ -453,30 +453,33 @@ class Adventure extends DemoEngine{
 						}
 
 						this._addInInventory(occhiali);
-						return answer;
-
+						return this.wear(occhiali.key, answer);
 					},
+					wear: () => `Sono già sul tuo naso!`,
+					takeOff: () => this.adventureData.objects.occhiali.on.drop(),
 					drop: `Meglio di no, non ci vedi molto bene senza!`
 				}
 			},
 			piumino: {
 				label: `un piumino nero`,
-				visible: false,
 				pattern: `(piumino|giacc(?:a|etto))(?: ner(?:o|a))?`,
 				description: () => `E' un piumino nero`+ (this.playerHas(this.adventureData.objects.occhiali) == false ? `. Sembra`:``)+` leggero, primaverile.`+ ((this.adventureData.objects.taschePiumino.visible === undefined) ? `\nHa quattro tasche, due interne e due esterne.`:``),
 				location: `ufficio`,
 				linkedObjects: [`taschePiumino`],
+				visible: false,
+				worn:false,
 				on: {
 					lookAt: () => {
 						if (this.playerHas(this.adventureData.objects.piumino)) 
 							this.discover(this.adventureData.objects.taschePiumino, true)
 						return null
 					},
-					wear: async (targets) => await this._take(targets[0]),
+					wear: () => this.wear(`piumino`, `Mi sta proprio bene.`),
+					takeOff: () => this.takeOff(`piumino`),
 					drop: async () => {
 						if (this.currentRoom == this.adventureData.rooms.ufficio) 
-							await this.CRT.printTyping(`Lo rimetti nell'attaccapanni...`, {cr: false})
-						return null
+							await this.CRT.printTyping(`Lo rimetti nell'attaccapanni...`)
+						return await this._removeFromInventory(this.inventory.piumino)
 					}
 				}
 			},
@@ -501,14 +504,15 @@ class Adventure extends DemoEngine{
 			},
 			badge: {
 				label: `un badge`,
-				visible: false,
 				pattern: `badge`,
+				visible: false,
 				read: false,
+				worn: false,
 				description: () =>  `Sopra c'è la tua foto e ` + (this.playerHas(this.adventureData.objects.occhiali) ? `il numero del badge: 098074` : `un numero poco distinguibile...`),
 				on: {
 					'lookAt|read': () => {
 						if(this.playerHas(this.adventureData.objects.occhiali))
-							this.getObject("badge").read = true
+							this.getObject(`badge`).read = true
 						return null
 					},
 					'useWith|bringCloser': async (mSubjects) => {
@@ -527,6 +531,8 @@ class Adventure extends DemoEngine{
 						}
 						return null
 					},
+					wear: () => this.wear(`badge`, `Hai indossato il tuo badge.`),
+					takeOff: () => this.takeOff(`badge`),
 				}
 			},
 			libro: {
