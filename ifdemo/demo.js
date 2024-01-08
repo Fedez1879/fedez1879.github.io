@@ -121,7 +121,7 @@ class Adventure extends DemoEngine{
 					},
 					scrivania: {
 						pattern: `scrivania`,
-						description: () => `E’ una scrivania rettangolare in legno chiaro. Sotto di essa c’è una cassettiera in ferro e il piccolo cestino dell’immondizia. Sopra di essa un'accozzaglia di appunti scritti su fogli e foglietti.` + (this.adventureData.objects.occhiali.visible === undefined && this.playerHas(this.adventureData.objects.occhiali) == false ? `\n`+this.adventureData.objects.occhiali.initialDescription : ``)
+						description: () => `E’ una scrivania rettangolare in legno chiaro. Sotto di essa c’è una cassettiera in ferro e il piccolo cestino dell’immondizia. Sulla scrivania sono sparsi un'accozzaglia di appunti scritti su fogli e foglietti.` + (this.adventureData.objects.occhiali.visible === undefined && this.playerHas(this.adventureData.objects.occhiali) == false ? `\n`+this.adventureData.objects.occhiali.initialDescription : ``)
 					},
 					appunti: {
 						pattern: `appunt(?:o|i)|fogli(?:o|i|etti)?`,
@@ -159,7 +159,7 @@ class Adventure extends DemoEngine{
 								this.discover(this.adventureData.objects.chiaveCassettiera)
 								await this.CRT.printTyping(`Con un rumoroso cigolio la cassettiera finalmente si è spostata...`,{cr: false});
 								await this.CRT.sleep(1500)
-								return ` Sotto di essa c'è una piccola chiave!`
+								return ` sotto di essa c'è una piccola chiave!`
 							},
 							lift: () => `E' toppo pesante!`
 						}
