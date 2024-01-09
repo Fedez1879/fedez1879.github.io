@@ -635,6 +635,8 @@ class IFEngine{
 		
 		// è un comando imperativo con callback
 		if(APO.command){
+			if(APO.actionObject.movement) return await this._go(APO.subjects[0], APO.actionObject.defaultMessage);
+		
 			let callback = APO.actionObject.callback ? APO.actionObject.callback : APO.actionObject.defaultMessage;
 			if(callback){
 				let ret = await this._callbackOrString(callback, input);
@@ -649,9 +651,11 @@ class IFEngine{
 
 	async _action(APO, input){
 		let actionObject = APO.actionObject;
+		/*
 		if(actionObject.movement){
 			return await this._go(APO.subjects[0], actionObject.defaultMessage);
 		}
+		*/
 
 		// è un'azione!
 		// vediamo se è fattibile
@@ -884,6 +888,7 @@ class IFEngine{
 		let blockedDirections = this.currentRoom.blockedDirections === undefined ? [] : this.currentRoom.blockedDirections; 
 		
 		//Esiste la direzione
+		console.log(direction,directions)
 		if(directions[direction] !== undefined && blockedDirections.includes(direction) === false){
 			if(typeof directions[direction] == 'string'){
 				this.enterRoom(directions[direction]);
