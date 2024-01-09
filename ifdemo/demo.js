@@ -296,6 +296,7 @@ class Adventure extends DemoEngine{
 						}
 					},
 					lettoreBadge: {
+						label: 'un lettore badge',
 						pattern: `lettore(?: badge)?`,
 						description: () => this.currentRoom.interactors.lettoreBadge.visible ? `E' un lettore RFID, credo serva per aprire la porta col badge personale.` : `Mi sembrava di averne visto uno... ma dove?`
 					}
