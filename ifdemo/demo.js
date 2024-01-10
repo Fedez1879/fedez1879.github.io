@@ -55,7 +55,7 @@ class Adventure extends DemoEngine{
 					mobile: {
 						pattern: `(?:moderno )?mobile`,
 						open:false,
-						description: () => `E' un massicico mobile di legno con le ante di vetro scuro.` + (this.currentRoom.interactors.mobile.open ? `All'interno il mobile è ricolmo di libri` : `\nRiesco ad intravedere qualcosa al suo interno...`),
+						description: () => `E' un massicico mobile di legno con le ante di vetro scuro.\n` + (this.currentRoom.interactors.mobile.open ? `All'interno il mobile è ricolmo di libri.` : `Riesco ad intravedere qualcosa al suo interno...`),
 						on: {
 							lookAt: () => this.currentRoom.interactors.mobile.description(),
 							open: () => this.currentRoom.interactors.ante.on.open(),
