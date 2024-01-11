@@ -378,7 +378,7 @@ class Adventure extends DemoEngine{
 						}
 					},
 					pulsantiera: {
-						pattern: `pulsanti(?:era)?`,
+						pattern: `tast(o|i)|pulsanti(?:era)?`,
 						description: () => this.playerHas(this.adventureData.objects.occhiali) ? `Nella pulsantiera ci sono solo numeri da 0 a 9 e un tasto verde.` : `Ha (credo) circa 11 tasti...`,
 						on: {
 							'press|push': `Non saprei davvero cosa digitare.`
