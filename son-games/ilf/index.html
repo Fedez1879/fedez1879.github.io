@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Indovina La Frase!</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+	<style>
+		@font-face {
+			font-family: 'Argentum Sans';
+			src: url('css/ArgentumSans-Black.eot');
+			src: url('css/ArgentumSans-Black.eot?#iefix') format('embedded-opentype'),
+			url('css/ArgentumSans-Black.woff2') format('woff2'),
+			url('css/ArgentumSans-Black.woff') format('woff'),
+			url('css/ArgentumSans-Black.svg#ArgentumSans-Black') format('svg');
+			font-weight: 900;
+			font-style: normal;
+			font-display: swap;
+		}
+
+
+		html, body{
+			margin: 0;
+			padding: 0;
+			background-color:#111;
+			height:100%;
+			font-family: 'Argentum Sans', Sans;
+			font-weight:bold;
+			background: url('css/bg.jpg');
+			background-size: cover;
+		}
+		#container{
+			height:100%;
+			display: flex;           /* establish flex container */
+		    flex-direction: column;  /* make main axis vertical */
+		    justify-content: center; /* center items vertically, in this case */
+		    align-items: center;     /* center items horizontally, in this case */
+		}
+		#letter_typed{
+			position: fixed;
+		    z-index: 15;
+		    top: 50%;
+		    left:50%;
+		    width: 192px;
+		    height: 192px;
+		    margin-top: calc(-192px / 2 );
+		    margin-left: calc(-192px / 2 );
+		    background: rgb(96,147,88);
+			background: linear-gradient(180deg, rgba(96,147,88,1) 0%, rgba(0,135,50,1) 100%);
+			color:#eee;
+		    font-size:10em;
+		    text-align:center;
+		    line-height:192px;
+		    text-shadow: 4px 4px 8px #000;
+		    border:6px solid #ccc;
+		    box-shadow: 10px 10px 10px #000;
+		    display: none;
+   			transition: all 0.3s ease;
+		}	
+		#grid{
+			border:20px solid #ccc;
+			padding:5px;
+			 background: rgb(4,0,68);
+background: linear-gradient(182deg, rgba(4,0,68,1) 0%, rgba(0,124,149,1) 15%, rgba(4,0,68,1) 18%, rgba(0,124,149,1) 63%, rgba(4,0,68,1) 70%, rgba(0,124,149,1) 100%); 
+		}
+		#loadFile{
+			display: none;
+		}
+		#definizione{
+			font-family: Sans;
+			background: rgb(201,87,0);
+			background: linear-gradient(180deg, rgba(201,87,0,1) 0%, rgba(126,54,0,1) 75%, rgba(212,138,0,1) 100%); 
+			color:#ccc;
+			padding:0.2em 0.4em;
+			margin-top:0.6em;
+			font-size:3em;
+			text-shadow: 2px 2px 4px #000;
+			border-radius: 0.6em;
+			visibility:hidden;
+			border: 2px solid #eee;
+		}
+		.grid-row{
+			display:flex;
+			flex-wrap: wrap;
+			justify-content:center;
+		}
+		.cell{
+			display:block;
+			border:4px solid black;
+			margin:4px;
+			background-color:#ddd;
+			width:80px;
+			height:96px;
+			background-size: cover;
+			cursor:pointer;
+			text-align:center;
+			font-size:5em;
+			line-height:100px;
+			transition: all 0.3s ease;
+		}
+		.empty {
+			background-color: transparent;
+		}
+		.found { 
+			background-color: orange !important;
+		}
+		.not_found { 
+			background-color: red !important;
+		}	
+	</style>
+</head>
+<body>
+	<div id="letter_typed">H</div>
+	<div id="container">
+		<div id="grid">
+			<div class="grid-row">
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+			</div>
+			<div class="grid-row">
+				<div class="cell">I</div>
+				<div class="cell">N</div>
+				<div class="cell">D</div>
+				<div class="cell">O</div>
+				<div class="cell">V</div>
+				<div class="cell">I</div>
+				<div class="cell">N</div>
+				<div class="cell">A</div>
+				<div class="cell empty"></div>
+				<div class="cell">L</div>
+				<div class="cell">A</div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+			</div>
+			<div class="grid-row">
+				<div class="cell">F</div>
+				<div class="cell">R</div>
+				<div class="cell">A</div>
+				<div class="cell">S</div>
+				<div class="cell">E</div>
+				<div class="cell">!</div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+			</div>
+			<div class="grid-row">
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+				<div class="cell empty"></div>
+			</div>
+		</div>
+		<div id="definizione">...</div>
+	</div>
+</body>
+<script>
+var Game = {
+	rows: 4,
+	cols: 14,
+	initial_row: 1,
+	cells: null,
+	letter_typed: document.querySelector("#letter_typed"),
+	letter_array: [],
+	grid: document.querySelector("#grid"),
+	definizione: document.querySelector("#definizione"),
+	processing: false,
+	consonants: 0,
+	solution: false,
+	audio: {
+		context: new AudioContext(),
+		buffer: {
+			pressed: null,
+			ding: null,
+			fail: null,
+			incorrect: null,
+			applause: null
+		}
+	},
+	createElement: function(className, content, id, show){
+		let e = document.createElement("div");
+		if(id)
+			e.setAttribute("id",`pos-${id}`);
+		if ( content === null )
+			className += " empty"
+		else if(show)
+			e.innerHTML = content
+		e.setAttribute("class", className);
+		return e	
+	},
+	createRow: function(){
+		return this.createElement("grid-row")	
+	},
+	createCell: function(content, pos, show){
+		return this.createElement("cell", content, pos, show)	
+	},
+	start: async function() {
+		await this.loadAudio();
+		await this.sleep(2500);
+		this.cells = new Array(this.rows).fill(null).map(()=>new Array(this.cols).fill(null))
+		do {
+			this.frase = this.askfrase()
+			//console.log(this.frase)
+		} while (this.fit() == false)
+		this.definizione.innerText = prompt("definizione").toUpperCase()
+		this.createGrid()
+		this.definizione.style.visibility = "visible"
+		setTimeout(() => document.addEventListener('keyup', this.keyUp, true), 1000);
+	},
+	loadAudio: async function(){
+		await this.loadmp3("pressed")
+		await this.loadmp3("ding")
+		await this.loadmp3("fail")
+		await this.loadmp3("incorrect")
+		await this.loadmp3("applause")
+	},
+	loadmp3: async function(name){
+		await window.fetch(`mp3/${name}.mp3`)
+			.then(response => response.arrayBuffer())
+			.then(arrayBuffer => this.audio.context.decodeAudioData(arrayBuffer))
+			.then(audioBuffer => this.audio.buffer[name] = audioBuffer);
+	},
+	playSound: function(audioBuffer){
+	    const source = this.audio.context.createBufferSource();
+	    source.buffer = audioBuffer;
+	    source.connect(this.audio.context.destination);
+	    source.start()
+	},
+	showSolution: function(letter){
+		for ( let r in this.cells ){
+			for (let c in this.cells[r] ){
+				let value = this.cells[r][c];
+				if (value == null)
+					continue;
+				if(letter === undefined || letter === value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')) document.querySelector(`#pos-${r}-${c}`).innerHTML = value
+			}
+			
+		}
+		if(letter === undefined){
+			this.playSound(this.audio.buffer.applause)
+			document.removeEventListener('keyup', this.keyUp, true);
+		}
+	},
+	keyUp: async function(evt){
+		console.log(Game.processing)
+		if (Game.processing)
+			return
+
+		if (evt.keyCode == 27){
+			if(Game.solution == false){
+				Game.playSound(Game.audio.buffer.incorrect)
+				await Game.sleep(1000)
+				return
+			}
+
+			if(confirm("Mostro la soluzione ?")){
+				Game.showSolution()
+				return;
+			}
+		}
+		if (evt.keyCode >= 65 && evt.keyCode <= 90){
+			if(Game.isVowel(evt.keyCode)){
+				if(Game.consonants >= 3){
+					Game.consonants -= 3;
+				} else {
+					Game.playSound(Game.audio.buffer.incorrect)
+					await Game.sleep(1000)
+					return;
+				}
+			}
+			Game.processing = true
+			await Game.letter(evt.key.toUpperCase())
+		}
+	},
+	letter: async function(letter){
+		await this.showletter(letter);
+		this.processing = false;
+		
+		if (this.letter_array.includes(letter)){
+			return await this.fail();
+		}
+		this.letter_array.push(letter)
+		let found = false
+		for ( let r in this.cells ){
+			for (let c in this.cells[r] ){
+				let value = this.cells[r][c]
+				if (value == null)
+					continue;
+				if(letter === value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')) {
+					found = true
+					await this.hl(r,c)
+					this.playSound(this.audio.buffer.ding)
+				}
+			}
+		}
+		await this.sleep(1000)
+		if(found){
+			this.solution = true;
+			if(this.isVowel(letter.charCodeAt(0)) == false)
+				this.consonants++;
+			document.querySelectorAll(`.cell`).forEach(e => e.classList.remove("found"))
+			this.showSolution(letter)
+		} else {
+			await this.fail()
+		}
+	},
+	isVowel(code){
+		return code == 65 || code == 69 || code == 73 || code == 79 || code == 85;
+	},
+	fail: async function(){
+		document.querySelectorAll(`.cell:not(.empty)`).forEach(e => e.classList.add("not_found"))
+		await this.sleep(200)
+		document.querySelectorAll(`.cell`).forEach(e => e.classList.remove("not_found"))
+		this.playSound(this.audio.buffer.fail)
+		await this.sleep(2000)
+	},
+	showletter: async function(letter){
+		this.letter_typed.innerHTML = letter
+		this.letter_typed.style.display = 'block'
+		Game.playSound(Game.audio.buffer.pressed)
+		await this.sleep(1000)
+		this.letter_typed.style.display = 'none'
+	},
+	hl: async function(r,c, letter){
+		await this.sleep(500)
+		document.querySelector(`#pos-${r}-${c}`).classList.add("found")
+	},
+	sleep: async function(ms){
+		return new Promise(
+			resolve => setTimeout(resolve, ms)
+	  	);
+	},
+	createGrid: function(){
+		this.grid.innerHTML = ""
+
+		this.fillCells()
+		for ( let r in this.cells ){
+			let row = this.createRow()
+			for (let c in this.cells[r] ){
+				let value = this.cells[r][c]
+				let show = (this.cells[r][c] == "?" || this.cells[r][c] == "'" || this.cells[r][c] == ","); 
+				row.appendChild(this.createCell(value, r+"-"+c, show))
+			}
+			this.grid.appendChild(row)
+		}
+	},
+	fillCells: function(){
+		let ri = 0 + this.initial_row
+		for (fr of this.frase){
+			let ci = 0
+			for (c = 0; c<fr.length; c++){
+				if(fr.charAt(c) != ' ')
+					this.cells[ri][ci] = fr.charAt(c).toUpperCase()
+				ci++
+			}
+			ri++
+		}
+		//console.log(this.cells)
+	},
+	askfrase: function(){
+		return prompt ("frase").trim().replace(/  +/g," ")
+	},
+	fit(){
+		if(this.frase.length == 0)
+			return false
+		let chunks = this.frase.split(" ")
+
+		let rows = []
+		//console.log(chunks)
+
+		let r_index = 0
+		let c_index = 0
+		for ( c of chunks ){
+			if(c_index == 0){
+
+				if( c.length > this.cols ){
+					alert ("non ci stà, danne un'altra")
+					return false		
+				}
+				rows[r_index] = c
+				c_index += c.length
+				if (c_index == 14){
+					c_index = 0
+					r_index++;
+					if ( r_index >= this.rows ){
+						alert ("non ci stà, danne un'altra")
+						return false		
+					}
+				}
+				continue
+
+			}
+
+			c_index += c.length + 1
+
+			if (c_index <= 14){
+				rows[r_index] += " "+c
+				if (c_index > 13){
+					c_index = 0
+					r_index++;
+					if ( r_index >= this.rows ){
+						alert ("non ci stà, danne un'altra")
+						return false		
+					}
+				}
+				continue
+				
+			} else {
+				c_index = 0
+				r_index++;
+
+				if ( r_index >= this.rows ){
+					alert ("non ci stà, danne un'altra")
+					return false		
+				}
+				if( c.length > this.cols ){
+					alert ("non ci stà, danne un'altra")
+					return false		
+				}
+				
+				rows[r_index] = c
+				c_index += c.length
+
+			
+			}
+		}
+		if (r_index > 2) this.initial_row = 0
+		this.frase = rows
+		return true
+	}
+}
+
+Game.start()
+</script>
+</html>
