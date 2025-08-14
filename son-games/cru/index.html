@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Cruciverba Generator</title>
+	<style>
+		html, body{
+			margin: 0;
+			padding: 0;
+			background-color:white;
+			height:100%;
+			font-family: Sans;
+		}
+		#container{
+			height:100%;
+			display: flex;           /* establish flex container */
+		    flex-direction: column;  /* make main axis vertical */
+		    justify-content: center; /* center items vertically, in this case */
+		    align-items: center;     /* center items horizontally, in this case */
+		}
+		#top{
+			position:fixed;
+			top:0;
+			right:0;
+			background-color:white;
+			border-color:2px solid #000;
+			display:flex;
+			justify-content:center;
+			align-items:center;
+		}
+		
+		#grid{
+			border: 1px solid #000;
+		}
+		#loadFile{
+			display: none;
+		}
+		.grid-row{
+			display:flex;
+			flex-wrap: wrap;
+			justify-content:center;
+		}
+		.cell{
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			position: relative;
+			border:1px solid black;
+			background-color:white;
+			width:56px;
+			height:56px;
+			padding:4px;
+			cursor:pointer;
+			text-align:center;
+			font-size:3em;
+		}
+		.block{
+			display:block; background-color:black; width:100%; height:100%
+		}
+		.number{
+			position:absolute; 
+			top:0em;
+			left:0.253em;
+			font-size:0.4em;
+		}
+		.selected {
+			background-color: yellow;
+		}
+		.hidden{
+			background-image: none !important;
+		}
+		@media print {
+           .noprint {
+              visibility: hidden;
+           }
+        }
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div id="top" class="noprint">
+			<div style="text-align: center; background-color:gray">
+				<button id="new">Nuovo Cruciverba</button>&nbsp;
+				<button id="save">Save</button>&nbsp;
+				<input id="loadFile" type="file" accept=".cru">
+				<button id="load">Load</button><hr/>
+				<button id="pb">Blocchi</button>&nbsp;
+				<button id="wr">Scrivi</button>&nbsp;
+				<select id="direction">
+					<option value="O">Orizzontale</option>
+					<option value="V">Verticale</option>
+				</select>
+				<label for="show">Nascondi soluzione</label><input type="checkbox" id="show" value=1 />&nbsp;
+			</div>
+		</div>
+		<div id="grid">
+			
+		</div>
+	</div>
+</body>
+<script>
+var Game = {
+	size: [],
+	cells: [],
+	defs: [],
+	grid: document.querySelector("#grid"),
+	pos: [],
+	mode: 0,
+	loadButton: document.querySelector("#loadFile"),
+	showButton: document.querySelector("#show"),
+	dirSelect: document.querySelector("#direction"),
+	createGrid: function(){
+		console.log("creating grid")
+		
+		this.grid.innerHTML = ""
+		this.cells = []
+
+		const [w,h] = this.size
+
+		for (let r=0; r<h; r++){
+			let cr = []
+			let row = this.createRow()
+			for (let c=0; c<w; c++){
+				cr.push(null)
+				row.appendChild(this.createCell(r+"-"+c))
+			}
+			this.grid.appendChild(row)
+			this.cells.push(cr)
+		}
+		cells = document.querySelectorAll(".cell")
+		cells.forEach((c) => c.addEventListener('click', (evt) => {
+			pos = c.id
+			pos = pos.replace("pos-","").trim()
+			this.pos = pos.split("-").map(p => parseInt(p))
+			const [pi,pj] = this.pos
+			if(this.mode == 0){
+				this.cells[pi][pj] = this.cells[pi][pj] == "#" ? null : "#"
+			}
+			this.redraw()
+		}))
+	},
+	createElement: function(className, id){
+		let e = document.createElement("div");
+		e.setAttribute("class",className);
+		if(id)
+			e.setAttribute("id",`pos-${id}`);
+			
+		return e	
+	},
+	createRow: function(){
+		return this.createElement("grid-row")	
+	},
+	createCell: function(pos){
+		let cell = this.createElement("cell",pos)
+		return cell
+	},
+	start: function(){
+		document.addEventListener('keydown', (evt) => {
+			if(this.mode == 1 && this.pos.length > 0){
+				console.log(evt.keyCode);
+
+				const [w,h] = this.size
+				const [y,x] = this.pos
+
+				let direction = false
+				//40 giù
+				//38 su
+				//37 sinistra
+				//39 destra
+				
+				if(evt.keyCode == 9){ // TAB
+					this.dirSelect.value = this.dirSelect.value == 'O' ? 'V' : 'O'
+					return;
+				}
+
+				if(evt.keyCode >=37 && evt.keyCode <= 40){ // DIREZIONE
+					
+					direction = true
+					switch (evt.keyCode){
+						case 40:
+							if (y+1 < h && this._libero(this.cells[y+1][x]))
+								this.pos[0]++
+							break;
+						case 38:
+							if (y > 0 && this._libero(this.cells[y-1][x]))
+								this.pos[0]--
+							break;
+						case 37:
+							if (x > 0 && this._libero(this.cells[y][x-1]))
+								this.pos[1]--
+							break;
+						case 39:
+							if (x+1 < w && this._libero(this.cells[y][x+1]))
+								this.pos[1]++
+							break;
+					}
+					
+				} 
+
+
+				if(evt.keyCode == 46){ // CANC
+					this.cells[y][x] = null
+				}
+				
+				if(evt.keyCode == 8){ // BACKSPACE
+					switch(this.dirSelect.value){
+					case 'O':
+						if (x > 0 && this._libero(this.cells[y][x-1])){
+							this.pos[1]--
+							this.cells[y][x-1] = null
+						}
+						break;
+					case 'V':
+						if (y > 0 && this._libero(this.cells[y-1][x])){
+							this.pos[0]--
+							this.cells[y-1][x] = null
+						}
+						break;
+					}
+				}
+				
+				if(this._libero(this.cells[y][x]) && evt.keyCode >= 65 && evt.keyCode <= 99){
+					this.cells[y][x] = evt.key.toUpperCase()
+					switch(this.dirSelect.value){
+					case 'O':
+						if (x+1 < w && this._libero(this.cells[y][x+1])){
+							this.pos[1]++
+						}
+						break;
+					case 'V':
+						if (y+1 < h && this._libero(this.cells[y+1][x])){
+							this.pos[0]++
+						}
+						break;
+					}
+				}
+				this.redraw()
+			}
+      }, false);
+    	document.querySelector("#new").addEventListener('click', (evt) => this.newGrid())
+        document.querySelector("#save").addEventListener('click', (evt) => this.save())
+        document.querySelector("#load").addEventListener('click', (evt) => this.load())
+        document.querySelector("#pb").addEventListener('click', (evt) => this.blocchi())
+        document.querySelector("#wr").addEventListener('click', (evt) => this.scrivi())
+        this.showButton.addEventListener('click', (evt) => this.toggle())
+        this.loadButton.addEventListener('change', (evt) => this.upload())
+	},
+	scrivi: function(){
+		console.log("scrivi");
+		this.mode = 1
+		this.hlPos();
+	},
+	blocchi: function(){
+		console.log("blocchi");
+		document.querySelectorAll('.cell').forEach(e=> e.classList.remove("selected"))
+		this.mode = 0
+	},
+	toggle: function(){
+		console.log("toggle")
+		this.pos = []
+		document.querySelectorAll('.cell').forEach(e=> e.classList.remove("selected"))
+		this.redraw()
+	},
+	hlPos: function(){
+		if (this.pos.length == 0)
+			return;
+
+		const [cellEl, cell] = this.getElCell(this.pos[0],this.pos[1])
+		if(this._libero(cell))
+			cellEl.className = "cell selected"
+	},
+	newGrid: function(){
+		size = window.prompt("Grid (WxH) ?")
+		if(size === null)
+			return
+
+		this.size = size.split("x")
+		this.createGrid()
+		this.reNumber()
+	},
+	reset: function(){
+		const [w,h] = this.size
+		for (let r=0; r<h; r++){
+			for (let c=0; c<w; c++){
+				this.cells[r][c] = null
+			}
+		}
+		this.redraw()
+	},
+	redraw: function(){
+		document.querySelectorAll(".cell").forEach(c => {
+			c.innerHTML = ''
+			c.className = "cell"
+		})
+		const [w,h] = this.size
+
+		for (let r=0; r<h; r++){
+			for (let c=0; c<w; c++){
+				let cell = this.cells[r][c]
+				let cellEl = document.querySelector(`#pos-${r}-${c}`)
+				let cellVal = this.cells[r][c];
+				
+				cellEl.className = "cell" 
+				if(this.mode == 1 && r == this.pos[0] && c == this.pos[1])
+					cellEl.className = "cell selected"
+				if(cellVal == "#"){
+					cellEl.append(this.createElement("block"))
+					continue
+				}
+	
+			}
+		}
+
+		this.reNumber();
+		
+	},
+	recalc: function(r,c){
+		//console.log(`provo a numerare cella ${r},${c}`)
+
+		const [w,h] = this.size
+		
+		let adjacents = {}
+
+		if(r-1 >=0){ // sopra
+			adjacents.sopra = this.cells[r-1][c]
+		}
+
+		if(c-1 >= 0){ // a sinistra
+			adjacents.sinistra = this.cells[r][c-1]
+		}
+
+		if(r+1 < h){ // giù
+			adjacents.sotto = this.cells[r+1][c]
+		}
+		
+		if(c+1 < w){ // a destra
+			adjacents.destra = this.cells[r][c+1]
+		}
+
+		let cellEl = document.querySelector(`#pos-${r}-${c}`)
+		cellEl.innerHTML = this.showButton.checked ? '' : this.cells[r][c]
+				
+		// scrivo numero se
+		// se ho blocco sinistra, blocco sopra o sotto e spazio a destra
+		// se ho blocco sopra, blocco a destra e spazio sotto
+		// 
+		if(
+			(this._bloccato(adjacents.sinistra) && this._libero(adjacents.destra)) || (this._bloccato(adjacents.sopra) && this._libero(adjacents.sotto)) || (this._bloccato(adjacents.sinistra) && this._bloccato(adjacents.sopra) && this._bloccato(adjacents.destra) && this._bloccato(adjacents.sotto))
+			 
+		){
+
+
+			
+				this.defs.push({
+					o: '',
+					v: ''
+				})
+
+				let number = this.createElement("number")
+				number.innerHTML = this.defs.length
+				cellEl.append(number)
+		}
+		
+
+
+
+		
+		
+		
+	},
+	_bloccato: function (pos){
+		return pos === undefined || pos === '#'
+	},
+	_libero: function (pos){
+		return pos !== undefined && pos !== '#'
+	},
+	reNumber: function(){
+		const [w,h] = this.size
+		this.defs = []
+		for (let r=0; r<h; r++){
+			for (let c=0; c<w; c++){
+				let cell = this.cells[r][c]
+				let cellEl = document.querySelector(`#pos-${r}-${c}`)
+				if (cell != '#')
+					this.recalc(r, c)
+				
+			}
+		}
+	},
+	getElCell: function(r, c){
+		let cellEl = document.querySelector(`#pos-${r}-${c}`)
+		let cell = this.cells[r][c]
+		return [cellEl, cell]
+	},
+	save: async function() {
+		let name = prompt("Name: ")
+		if(name === null)
+			return
+
+		const blob = new Blob([this.cells.join("\n")], { type: 'text/plain' });
+		await this.saveFile(blob, name);
+	},
+	saveFile: async function(blob, suggestedName){
+  		const blobURL = URL.createObjectURL(blob);
+		// Create the `` element and append it invisibly.
+		const a = document.createElement('a');
+		a.href = blobURL;
+		a.download = `${suggestedName}.cru`;
+		a.style.display = 'none';
+		document.body.append(a);
+		// Click the element.
+		a.click();
+		// Revoke the blob URL and remove the element.
+		setTimeout(() => {
+			URL.revokeObjectURL(blobURL);
+			a.remove();
+		}, 1000);
+	},
+	load: function (){
+		this.loadButton.click()
+	},
+	upload: function(){
+		const file = this.loadButton.files[0];
+		const reader = new FileReader();
+
+		reader.onload = (e) => {
+			let result = e.target.result;
+			const rows = result.trim().split('\n');
+			let cells = rows.map((item) => {
+				let items = item.split(',')
+				items = items.map((v) => v == "" ? null : v)
+				return items
+			})
+			this.size = [ cells.length, cells[0].length ];
+		
+			this.createGrid()
+			this.cells = cells
+			this.redraw()
+		};
+
+		reader.readAsText(file);
+	}
+
+}
+
+Game.start()
+</script>
+</html>
